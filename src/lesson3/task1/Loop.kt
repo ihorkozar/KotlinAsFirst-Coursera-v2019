@@ -2,6 +2,11 @@
 
 package lesson3.task1
 
+import java.lang.Math.abs
+import java.lang.Math.pow
+import kotlin.math.log10
+import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 /**
@@ -67,7 +72,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int = n.toString().length
 
 /**
  * Простая
@@ -75,7 +80,18 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    var a = 1
+    var b = 1
+    var count = n - 2
+    while (count > 0) {
+        val tmp = a
+        a = b
+        b += tmp
+        count--
+    }
+    return b
+}
 
 /**
  * Простая
@@ -106,7 +122,12 @@ fun maxDivisor(n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    for (i in 2..min(m, n))
+        if (m % i == 0 && n % i == 0)
+            return false
+    return true
+}
 
 /**
  * Простая
@@ -144,7 +165,20 @@ fun collatzSteps(x: Int): Int = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var i = 1
+    var sign = 1
+    var sum = 0.0
+
+    do {
+        val item = sign * pow(x, i.toDouble()) / factorial(i)
+
+        sum += item
+        i += 2
+        sign *= -1
+    } while (abs(item) > eps)
+    return sum
+}
 
 /**
  * Средняя
@@ -185,7 +219,13 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var stringNum = n.toString()
+    for (i in 1 until stringNum.length)
+        if (stringNum[i - 1] != stringNum[i])
+            return true
+    return false
+}
 
 /**
  * Сложная

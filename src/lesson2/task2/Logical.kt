@@ -3,6 +3,9 @@
 package lesson2.task2
 
 import lesson1.task1.sqr
+import lesson1.task1.trackLength
+import java.lang.Math.max
+import java.lang.Math.min
 
 /**
  * Пример
@@ -48,7 +51,10 @@ fun daysInMonth(month: Int, year: Int): Int = TODO()
 fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double
-): Boolean = TODO()
+): Boolean {
+    if (r2 < r1) return false
+    return (sqr(x2 - x1) + sqr(y2 - y1) <= sqr(r2 - r1))
+}
 
 /**
  * Средняя
@@ -59,4 +65,13 @@ fun circleInside(
  * кирпич 4 х 4 х 4 пройдёт через отверстие 4 х 4.
  * Вернуть true, если кирпич пройдёт
  */
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = TODO()
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
+    val length = min(min(a, b), c)
+    val width = max(max(a, b), c)
+    val height = a + b + c - length - width
+
+    val holeLength = min(r, s)
+    val holeHigth = max(r, s)
+
+    return length <= holeLength && height <= holeHigth
+}
