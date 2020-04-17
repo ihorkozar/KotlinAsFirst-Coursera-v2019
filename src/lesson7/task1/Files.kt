@@ -3,6 +3,8 @@
 package lesson7.task1
 
 import java.io.File
+import java.lang.Integer.*
+import kotlin.math.pow
 
 /**
  * Пример
@@ -55,7 +57,6 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
 
-
 /**
  * Средняя
  *
@@ -91,7 +92,28 @@ fun sibilants(inputName: String, outputName: String) {
  *
  */
 fun centerFile(inputName: String, outputName: String) {
-    TODO()
+    var max = MIN_VALUE
+
+    for (line in File(inputName).readLines()) {
+        if (line.trim().length > max) {
+            max = line.trim().length
+        }
+    }
+
+    val out = File(outputName).bufferedWriter()
+
+    for (line in File(inputName).readLines()) {
+        var temp = (max - line.trim().length) / 2
+
+        while (temp > 0) {
+            out.write(" ")
+            temp--
+        }
+
+        out.write(line.trim())
+        out.newLine()
+    }
+    out.close()
 }
 
 /**
@@ -209,7 +231,30 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
-    TODO()
+    val words = mutableListOf<String>()
+    var max = MIN_VALUE
+
+    for (line in File(inputName).readLines()) {
+        val listOfChar = mutableListOf<Char>()
+
+        for (i in line) {
+            if (i.toLowerCase() !in listOfChar) {
+                listOfChar.add(i.toLowerCase())
+            } else {
+                break
+            }
+
+            if (listOfChar.size == line.length) {
+                words.add(line)
+                if (line.length > max) {
+                    max = line.length
+                }
+            }
+        }
+    }
+    val out = File(outputName).bufferedWriter()
+    out.write(words.filter { it.length == max }.toString().removeSurrounding("[", "]"))
+    out.close()
 }
 
 /**
@@ -244,15 +289,15 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * Соответствующий выходной файл:
 <html>
-    <body>
-        <p>
-            Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
-            Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-        </p>
-        <p>
-            Suspendisse <s>et elit in enim tempus iaculis</s>.
-        </p>
-    </body>
+<body>
+<p>
+Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
+Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
+</p>
+<p>
+Suspendisse <s>et elit in enim tempus iaculis</s>.
+</p>
+</body>
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -295,67 +340,67 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
-* Утка по-пекински
-    * Утка
-    * Соус
-* Салат Оливье
-    1. Мясо
-        * Или колбаса
-    2. Майонез
-    3. Картофель
-    4. Что-то там ещё
-* Помидоры
-* Фрукты
-    1. Бананы
-    23. Яблоки
-        1. Красные
-        2. Зелёные
+ * Утка по-пекински
+ * Утка
+ * Соус
+ * Салат Оливье
+1. Мясо
+ * Или колбаса
+2. Майонез
+3. Картофель
+4. Что-то там ещё
+ * Помидоры
+ * Фрукты
+1. Бананы
+23. Яблоки
+1. Красные
+2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *
  * Соответствующий выходной файл:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
 <html>
-  <body>
-    <ul>
-      <li>
-        Утка по-пекински
-        <ul>
-          <li>Утка</li>
-          <li>Соус</li>
-        </ul>
-      </li>
-      <li>
-        Салат Оливье
-        <ol>
-          <li>Мясо
-            <ul>
-              <li>
-                  Или колбаса
-              </li>
-            </ul>
-          </li>
-          <li>Майонез</li>
-          <li>Картофель</li>
-          <li>Что-то там ещё</li>
-        </ol>
-      </li>
-      <li>Помидоры</li>
-      <li>
-        Фрукты
-        <ol>
-          <li>Бананы</li>
-          <li>
-            Яблоки
-            <ol>
-              <li>Красные</li>
-              <li>Зелёные</li>
-            </ol>
-          </li>
-        </ol>
-      </li>
-    </ul>
-  </body>
+<body>
+<ul>
+<li>
+Утка по-пекински
+<ul>
+<li>Утка</li>
+<li>Соус</li>
+</ul>
+</li>
+<li>
+Салат Оливье
+<ol>
+<li>Мясо
+<ul>
+<li>
+Или колбаса
+</li>
+</ul>
+</li>
+<li>Майонез</li>
+<li>Картофель</li>
+<li>Что-то там ещё</li>
+</ol>
+</li>
+<li>Помидоры</li>
+<li>
+Фрукты
+<ol>
+<li>Бананы</li>
+<li>
+Яблоки
+<ol>
+<li>Красные</li>
+<li>Зелёные</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</body>
 </html>
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -382,23 +427,23 @@ fun markdownToHtml(inputName: String, outputName: String) {
  * Вывести в выходной файл процесс умножения столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 111):
-   19935
-*    111
+19935
+ *    111
 --------
-   19935
+19935
 + 19935
 +19935
 --------
- 2212785
+2212785
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  * Нули в множителе обрабатывать так же, как и остальные цифры:
-  235
-*  10
+235
+ *  10
 -----
-    0
+0
 +235
 -----
- 2350
+2350
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
@@ -412,21 +457,258 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
-  19935 | 22
- -198     906
- ----
-    13
-    -0
-    --
-    135
-   -132
-   ----
-      3
+19935 | 22
+-198     906
+----
+13
+-0
+--
+135
+-132
+----
+3
 
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val deductibleList = deductible(lhv.div(rhv), rhv)
+    val residualList = residual(lhv, rhv, deductibleList)
+    val inputFile = File(outputName).bufferedWriter()
+    inputFile.write(print(lhv, rhv, deductibleList, residualList))
+    inputFile.close()
+}
+
+// возвращает то что вычитают
+fun deductible(div: Int, rhv: Int): MutableList<Int> {
+    val deductible = mutableListOf<Int>()
+    val divList = mutableListOf<Int>()
+
+    for (element in div.toString().toList()) {
+        divList.add(parseInt(element.toString()))
+    }
+    for (element in div.toString()) {
+        deductible.add(parseInt(element.toString()) * rhv)
+    }
+    return deductible
+}
+
+fun residualStr(a: String, b: Int): String {
+    val countOfB = b.toString().length
+    val countOfA = a.length
+    val res = a.substring(countOfB, countOfA)
+
+    if (parseInt(a.substring(0, countOfB)) - b < 0)
+        return (parseInt(a) - b * 10.0.pow(countOfA - countOfB + 1).toInt()).toString()
+
+    if (parseInt(a.substring(0, countOfB)) - b != 0)
+        return (parseInt(a) - b * 10.0.pow(countOfA - countOfB).toInt()).toString()
+
+    if (countOfA <= countOfB) {
+        return a
+    }
+    return res
+}
+
+// возвращает лист остатков от вычитание
+fun residual(lhv: Int, rhv: Int, deductibleList: MutableList<Int>): MutableList<Int> {
+    var number = lhv.toString()
+    val residualList = mutableListOf<Int>()
+
+    for (i in 0 until deductibleList.size) {
+        var residual = ""
+        residual = try {
+            getResidual(number, deductibleList[i], deductibleList.size - 1, i, deductibleList[i + 1])
+        } catch (e: IndexOutOfBoundsException) {
+            getResidual(number, deductibleList[i], deductibleList.size - 1, i, 0)
+        }
+        if (i != deductibleList.size - 1) {
+            residualList.add(parseInt(residual))
+        }
+        number = residualStr(number, deductibleList[i])
+    }
+    residualList.add(lhv.rem(rhv)) //остаток от деления
+    return residualList
+}
+
+/**
+ * @param a оставшееся число
+ * @param b вычитаемое
+ * @param c количество значений в листе вычитаемых
+ * @param d итератор
+ * @param e ded+1
+ * @return возвращает по одному остаток от вычитания
+ **/
+fun getResidual(a: String, b: Int, c: Int, d: Int, e: Int): String {
+    var res = "0"
+
+    if (c - d == 1) {
+        res = a
+    } else if (c != d) {
+        if (a.substring(0, 1) == "0") {
+            return a.substring(1, b.toString().length + 1)
+        }
+        if (b == 0 && a.length != e.toString().length) {
+            return a.substring(0, e.toString().length)
+        }
+        res = a.substring(0, (b * 10).toString().length)
+    }
+    return (parseInt(res) - b * 10).toString()
+}
+
+fun printDeductible(i: Int, ded: Int, str1: String, div: Int, tab3: Int, rhv: Int, lhv: Int): String =
+    if (rhv > lhv) {
+        if (lhv.toString().length >= 2) {
+            MutableList(lhv.toString().length - 2) { " " }.joinToString(separator = "") +
+                    "-0   " + div + "\n"
+        } else {
+            "-0   $div\n"
+        }
+    } else if (i == 0) { // если это первое вычитаемое то пишем еще и результат от деления
+        "-" + ded.toString() +
+                MutableList(str1.length - ded.toString().length - 1) { " " }.joinToString(separator = "") +
+                div + "\n"
+    } else {
+        try {
+            MutableList(tab3) { " " }.joinToString(separator = "") +
+                    "-" +
+                    ded + "\n"
+        } catch (e: IllegalArgumentException) {
+            MutableList(0) { " " }.joinToString(separator = "") +
+                    "-" +
+                    ded + "\n"
+        }
+    }
+
+fun printLine(i: Int, tab3: Int, tab2: Int, ded: Int, resid: MutableList<Int>, rhv: Int, lhv: Int): String =
+    if (rhv > lhv && lhv.toString().length >= 2) {
+        MutableList(lhv.toString().length) { "-" }.joinToString(separator = "") + "\n"
+    } else if (i != 0) {
+        try {
+            MutableList(min(tab3, tab2)) { " " }.joinToString(separator = "") +
+                    MutableList(max(ded.toString().length + 1, resid[i - 1].toString().length)) { "-" }.joinToString(
+                        separator = ""
+                    ) + "\n"
+        } catch (e: IllegalArgumentException) {
+            MutableList(0) { " " }.joinToString(separator = "") +
+                    MutableList(max(ded.toString().length + 1, resid[i - 1].toString().length)) { "-" }.joinToString(
+                        separator = ""
+                    ) + "\n"
+        }
+    } else {
+        MutableList(min(tab3, tab2)) { " " }.joinToString(separator = "") +
+                MutableList(ded.toString().length + 1) { "-" }.joinToString(separator = "") + "\n"
+    }
+
+
+fun printResidual(
+    i: Int, deductibleList: MutableList<Int>,
+    residualList: MutableList<Int>, lhv: Int, rhv: Int, tab1: Int, tab2: Int, tab3: Int
+): Pair<String, Int> {
+    val res: Int
+    if (i != deductibleList.size - 1) { //все кроме последнего
+        if (i != 0 && deductibleList[i] == residualList[i - 1] ||
+            (i == 0 && lhv.toString().substring(0, deductibleList[0].toString().length).toInt() == deductibleList[0])
+        ) //если это первый после черты ноль
+        { //когда надо приписать лишний ноль
+            return Pair(
+                MutableList(tab1 - 1) { " " }.joinToString(separator = "") +
+                        "0" +
+                        residualList[i] + "\n", tab1
+            )
+        } else {
+            res = if (deductibleList[i] == 0) { //если вычитаемое было ноль то позицию не меняем
+                tab2
+            } else tab1
+
+            if (i == 0 && parseInt(
+                    lhv.toString().substring(0, deductibleList[0].toString().length)
+                ) < deductibleList[0]
+            ) {
+                return Pair(
+                    MutableList(res + 1) { " " }.joinToString(separator = "") +
+                            residualList[i] + "\n", res
+                )
+            }
+
+            return Pair(
+                MutableList(res) { " " }.joinToString(separator = "") +
+                        residualList[i] + "\n", res
+            )
+        }
+    } else {//отдельно для последнего
+        return if (lhv < rhv && lhv.toString().length >= 2) { // 0 когда делитель больше делимого
+            Pair(residualList[i].toString() + "\n", tab1)
+        } else if (lhv == rhv) {
+            Pair(
+                MutableList(tab3 + deductibleList[i].toString().length) { " " }.joinToString(separator = "") + residualList[i].toString() + "\n",
+                tab1
+            )
+        } else {
+            if (i == 0) { //если был всего лишь один элемент
+                Pair(
+                    MutableList(deductibleList[i].toString().length - residualList[i].toString().length + 1) { " " }.joinToString(
+                        separator = ""
+                    ) +
+                            residualList[i] + "\n", tab1
+                )
+            } else {
+                if (parseInt(lhv.toString().substring(0, deductibleList[0].toString().length)) < deductibleList[0]) {
+                    Pair(
+                        MutableList(lhv.toString().length - residualList[i].toString().length) { " " }.joinToString(
+                            separator = ""
+                        ) +
+                                residualList[i] + "\n", tab1
+                    )
+                } else {
+                    Pair(
+                        MutableList(lhv.toString().length - residualList[i].toString().length + 1) { " " }.joinToString(
+                            separator = ""
+                        ) +
+                                residualList[i] + "\n", tab1
+                    )
+                }
+            }
+        }
+    }
+}
+
+fun print(lhv: Int, rhv: Int, deductibleList: MutableList<Int>, residualList: MutableList<Int>): String {
+    val div = lhv.div(rhv)
+    var tab1 = 1 // расстоение до остатка residualList
+    var tab2 = 0 // tab1 с прошлой итерации
+    var tab3: Int // расстояние до вычитаемоего deductibleList
+    var resultString: String
+    var str1 = " $lhv | "
+    var str2 = "$rhv\n"
+
+//    если первое вычитаемое меньше по количеству цифр
+    if (parseInt(
+            lhv.toString().substring(0, deductibleList[0].toString().length)
+        ) < deductibleList[0] || (rhv > lhv && lhv.toString().length >= 2)
+    ) {
+        str1 = "$lhv | "
+        str2 = "$rhv\n"
+        tab1--
+    }
+    resultString = str1 + str2
+    for (i in 0 until deductibleList.size) {
+        tab1 += deductibleList[i].toString().length - residualList[i].toString().length + 1
+        tab3 = if (i != 0) {
+            tab2 + residualList[i - 1].toString().length - deductibleList[i].toString().length - 1 //минус один = знак минуса
+        } else {
+            tab2
+        }
+        if (i != 0 && deductibleList[i] == 0 && residualList[i - 1] != 0) {
+            tab1 = tab3
+        }
+        resultString += printDeductible(i, deductibleList[i], str1, div, tab3, rhv, lhv)
+        resultString += printLine(i, tab3, tab2, deductibleList[i], residualList, rhv, lhv)
+        val k = printResidual(i, deductibleList, residualList, lhv, rhv, tab1, tab2, tab3)
+        resultString += k.first
+        tab1 = k.second
+        tab2 = tab1
+    }
+    return resultString
 }
 

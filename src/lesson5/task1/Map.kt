@@ -2,6 +2,9 @@
 
 package lesson5.task1
 
+import java.lang.Integer.max
+
+
 /**
  * Пример
  *
@@ -187,7 +190,8 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean =
+    if (word.isEmpty()) true else chars.joinToString(separator = "").toLowerCase().toSet().containsAll(word.toLowerCase().toSet())
 
 /**
  * Средняя
@@ -212,7 +216,16 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+    for (i in words.indices) {
+        for (k in i + 1 until words.size) {
+            if ((words[i].toLowerCase().toSet() - words[k].toLowerCase().toSet()).isEmpty() ||
+                (words[k].toLowerCase().toSet() - words[i].toLowerCase().toSet()).isEmpty())
+                return true
+        }
+    }
+    return false
+}
 
 /**
  * Сложная
@@ -257,7 +270,15 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    for (i in list.indices) {
+        for (k in i + 1 until list.size) {
+            if (list[i] + list[k] == number)
+                return Pair(i, k)
+        }
+    }
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная
@@ -280,4 +301,37 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val res = mutableSetOf<String>()
+    val wightList = mutableListOf<Int>()
+    val pricesList = mutableListOf<Int>()
+    val treasuresList = mutableListOf<String>()
+
+    val prices = Array(treasures.size + 1) { Array(capacity + 1) { 0 } }
+    var tmp = capacity
+
+    for ((key, value) in treasures) {
+        treasuresList.add(key)
+        wightList.add(value.first)
+        pricesList.add(value.second)
+    }
+
+    for (i in 0 until treasures.size) {
+        for (k in 0..capacity) {
+            if (wightList[i] <= k) {
+                prices[i][k] = max(prices[i][k], prices[i][k - wightList[i]] + pricesList[i])
+            } else {
+                prices[i][k] = prices[i][k]
+            }
+        }
+    }
+
+    for (i in treasures.size downTo 1) {
+        if (prices[i][tmp] != prices[i - 1][tmp]) {
+            res.add(treasuresList[i - 1])
+            tmp -= wightList[i - 1]
+        }
+    }
+
+    return res
+}

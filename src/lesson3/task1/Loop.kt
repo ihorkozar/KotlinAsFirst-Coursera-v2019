@@ -4,10 +4,7 @@ package lesson3.task1
 
 import java.lang.Math.abs
 import java.lang.Math.pow
-import kotlin.math.log10
-import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -72,7 +69,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = n.toString().length
+fun digitNumber(n: Int): Int = if (n == 0) 1 else ceil(log10(abs(n) + 0.5)).toInt()
 
 /**
  * Простая
@@ -106,14 +103,24 @@ fun lcm(m: Int, n: Int): Int = TODO()
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    for (i in 2..n) {
+        if (n.rem(i) == 0) return i
+    }
+    return 0
+}
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    for (i in n - 1 downTo 1) {
+        if (n.rem(i) == 0) return i
+    }
+    return 1
+}
 
 /**
  * Простая
@@ -165,20 +172,7 @@ fun collatzSteps(x: Int): Int = TODO()
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
-fun sin(x: Double, eps: Double): Double {
-    var i = 1
-    var sign = 1
-    var sum = 0.0
-
-    do {
-        val item = sign * pow(x, i.toDouble()) / factorial(i)
-
-        sum += item
-        i += 2
-        sign *= -1
-    } while (abs(item) > eps)
-    return sum
-}
+fun sin(x: Double, eps: Double): Double = TODO()
 
 /**
  * Средняя
@@ -198,7 +192,17 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var number = n
+    var result = 0
+
+    while (number > 0) {
+        result = result * 10 + number.rem(10)
+        number = number.div(10)
+    }
+
+    return result
+}
 
 /**
  * Средняя
@@ -247,4 +251,18 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var currentLength = 0
+    var number = 1
+    while (true) {
+        currentLength += digitNumber(fib(number))
+        if (currentLength >= n)
+            break
+        number++
+    }
+
+    val m = currentLength - n
+
+    return if (m == 0) fib(number).rem(10.0.pow(m + 1).toInt()) else
+        fib(number).rem(10.0.pow(m + 1).toInt()).div(10.0.pow(m).toInt())
+}

@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import java.util.*
+
 /**
  * Пример
  *
@@ -208,4 +210,85 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var position = cells.div(2)
+    val conveyor = MutableList(cells) { 0 }
+
+    if (!checkSymbol(commands) || !checkBrackets(commands)) {
+        throw IllegalArgumentException()
+    }
+    val dequeCycles = ArrayDeque<Int>()
+
+    var operationsCount = 0
+    var counter = 0
+    while (counter < commands.length && operationsCount != limit) {
+        when (commands[counter]) {
+            '[' -> {
+                if (conveyor[position] == 0) {
+                    var count = 0
+                    while (counter != commands.length) {
+                        counter++
+                        if (commands[counter] == '[') count++
+                        if (commands[counter] == ']') count--
+                        if (count == -1) break
+                    }
+                } else dequeCycles.addFirst(counter)
+            }
+            ']' -> {
+                if (conveyor[position] != 0) {
+                    counter = dequeCycles.peekFirst()
+                } else dequeCycles.removeFirst()
+            }
+
+            '+' -> conveyor[position]++
+            '-' -> conveyor[position]--
+            '>' -> {
+                position++
+                if (position > conveyor.size - 1) throw IllegalStateException()
+            }
+            '<' -> {
+                position--
+                if (position < 0) throw IllegalStateException()
+            }
+            else -> {
+            }
+        }
+        counter++
+        operationsCount++
+    }
+    return conveyor.toList()
+}
+
+/**
+ *  Функция для проверки корректности скобок
+ *  @return true - если корректно
+ */
+
+fun checkBrackets(commands: String): Boolean {
+    val mStack: Stack<Char> = Stack()
+    for (i in commands.indices) {
+        when (commands[i]) {
+            ']' -> if (!mStack.isEmpty()) {
+                if (mStack.peek() == '[' && commands[i] == ']') {
+                    mStack.pop()
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
+            '[' -> {
+                mStack.push(commands[i])
+            }
+        }
+    }
+
+    return mStack.isEmpty()
+}
+
+/**
+ *  Функция для проверки корректности символов
+ *  @return true - если корректно
+ */
+
+fun checkSymbol(commands: String): Boolean = " ><+-[]".toSet().containsAll(commands.toSet())
